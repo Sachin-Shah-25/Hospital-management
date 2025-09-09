@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { Contex } from '../Cont/Contex';
 import { useNavigate } from 'react-router-dom';
 function Appointment() {
-  const {setUserAccount}=useContext(Contex);
+  const {setUserAccount,getUserAccount}=useContext(Contex);
   const [getUserFirstName, setUserFirstName] = useState("");
   const [getUserLastName, setUserLastName] = useState("");
   const [getUserEmail, setUserEmail] = useState("");
@@ -21,22 +21,23 @@ function Appointment() {
   const [isUserVisited , setIsUserVisited]=useState(false);
 
   const getNavigate=useNavigate();
-
-
-
-
   const getAllDoctor = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/admin/doctors/${getUserSelectDept}`);
-      setAllDoctorName(data.message);
+      const { data } = await axios.get(`http://localhost:5000/admin/doctors/${getUserSelectDept}`,{withCredentials:true});
+      if(data.success || data.status==200){
+        setAllDoctorName(data.message);
+      }
+     else {
+       throw new Error("Not Found")
+     }
     } catch (error) {
-      toast.error("Something Went Wrong ");
+
+      toast.error(error.message || "Something went wrong");
+      console.log(error.message|| "Something Went wrong")
     }
   }
 
-  useEffect(() => {
-    getAllDoctor();
-  }, [getUserSelectDept]);
+ 
 
   $(document).ready(() => {
     $("#appoint_data").click(() => {
@@ -49,18 +50,16 @@ function Appointment() {
 
 
 
-  useEffect(() => {
-  }, [getUserSelectDoctor]);
-
   const bookAppFun = async (e) => {
     e.preventDefault();
-
     try {
-      const appoint_Form = new FormData(e.target)
       if (!getUserLastName || !getUserFirstName || !getUserEmail || !getUserNic || !getUserPhone || !getUserDOB || !getUserGender || !getUserAptDate || !getUserAdd) {
-       
         toast.warn("All Filed are Requried");
         return;
+      }
+      if(getUserPhone.length>10){
+        toast.error("Invalid Phone Number")
+        return
       }
       const patt = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!patt.test(getUserEmail)) {
@@ -68,22 +67,24 @@ function Appointment() {
         return;
       }
 
-      const now = new Date();
-      if (getUserAptDate <= now.toLocaleDateString().toString()) {
-        toast.error("Appointment Date is Not available");
-        return;
-      }
+      // const now = new Date();
+      // console.log(getUserAptDate, " ", now.toLocaleDateString().toString())
+      // if (getUserAptDate <= now.toLocaleDateString().toString()) {
+      //   toast.error("Appointment Date is Not available");
+      //   return;
+      // }
 
 
       const appointForm = new FormData(e.target)
-     
+      console.log(Object.fromEntries(appointForm))
       const { data } = await axios.post("http://localhost:5000/user/bookappointment", appointForm, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+       withCredentials:true,
+       headers:{
+        "Content-Type":"multipart/form-data"
+       }
       });
-
-      if (data.success) {
+      console.log(data)
+      if (data.success || data.status==201) {
         toast.success("Appointment Book Successfully");
         setUserFirstName("")
         setUserLastName("");
@@ -95,14 +96,34 @@ function Appointment() {
         setUserNic("");
         setUserSelectDept("");
         setUserSelectDoctor("");
-        getNavigate("/home")
-
-        setUserAccount(data.message);
+        getNavigate("/")
       }
     } catch (error) {
-      toast.error(error.message);
+      const status=error.response.status
+      const msg=error.response.data.message
+      if(status==401){
+        toast.error(msg)
+        getNavigate("/auth")
+      }
+      else if(status==403){
+        getNavigate("/auth")
+        toast.error(msg)
+      }
+      else {
+        toast.error("Something went wrong");
+        console.log("An error Occured : ",error.message)
+
+      }
     }
   }
+   useEffect(() => {
+    getAllDoctor();
+  }, [getUserSelectDept]);
+  useEffect(()=>{
+    if(!getUserAccount){
+      return
+    }
+  },[])
   return (
    
     <div className="appoint_form">
@@ -121,7 +142,7 @@ function Appointment() {
             value={getUserPhone} name='phone' onChange={(e) => { setUserPhone(e.target.value) }} placeholder='Phone Number' />
         </div>
         <div className="nic">
-          <input type="number" value={getUserNic} name='nic' onChange={(e) => { setUserNic(e.target.value) }} placeholder='NIC' />
+          <input type="text" value={getUserNic} name='nic' onChange={(e) => { setUserNic(e.target.value) }} placeholder='NIC' />
         </div>
         <div className="dob" id='dob_data'>
           <input type="text" value={getUserDOB} name='dob' onChange={(e) => { setUserDob(e.target.value) }} id='dob_input' placeholder='Your Date Of Birth' />
@@ -167,7 +188,7 @@ function Appointment() {
         </div>
 
         <div id="book_appointment">
-          <button>Book Appointment</button>
+          <button type='submit' >Book Appointment</button>
         </div>
       </form>
     </div>

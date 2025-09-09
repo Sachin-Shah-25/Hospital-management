@@ -1,77 +1,85 @@
 const create_doc_data = require("../Model/adminmodel");
 const bookappointment = require("../Model/appmodel");
 
-const admin_login = async (req, res) => {
+const admin_login = async (req, res, next) => {
     const { username, useremail, userpassword } = req.body;
-
-   
     try {
-
         const login_admin = await createauthmodel.create({
             username,
             useremail,
             userpassword
         });
         if (!login_admin) {
-            return res.status(503).json({ success: false, message: "Something went wrong" });
+            throw new Error("Please Login Again")
         }
-        return res.status(200).json({ success: true, message: "Account Created successfully" });
+        return res.status(201).json({ success: true, message: "Account Created successfully" });
     } catch (error) {
-        return res.status(503).json({ success: false, message:error.message});
+        next(error)
     }
 }
 
-const add_doc_fun = async (req, res) => {
-    const { firstname, lastname, email, phone, nic, dob,dep } = req.body
-    const getImageName=req.file.filename;
+const add_doc_fun = async (req, res, next) => {
+    const { firstname, lastname, email, phone, nic, dob, dep } = req.body
+    console.log(req.body)
     try {
+        if (!req.file) {
+            throw new Error("Image Not Found")
+        }
+        const getImageName = req.file.filename;
         const isdoctorUploaded = await create_doc_data.create({
             name: firstname + " " + lastname,
             email, phone, nic, dob,
-            image:getImageName,  
+            image: getImageName,
             dep
         });
         if (!isdoctorUploaded) {
-            return res.status(503).json({ success: false, message: "No Uploaded" });
+            throw new Error("Something Went Wrong")
         }
         return res.status(200).json({ success: true, message: isdoctorUploaded });
     } catch (error) {
-        return res.status(505).json({ success: false, message: error.message });
+        next(error)
     }
 
 }
 
-const get_all_doctors=async(req,res)=>{
-    const getAllDoc=await create_doc_data.find({});
-    if(!getAllDoc){
-        return res.status(404).json({success:false,message:"Doctor Detail Not Found"});
-    }
-    return res.status(200).json({success:true,message:getAllDoc});
-}
-
-const get_doctors_name=async(req,res)=>{
-    const getDep=req.params.id;
+const get_all_doctors = async (req, res, next) => {
     try {
-        const getAllDoctorsName=await create_doc_data.find({dep:getDep});
-        if(!getAllDoctorsName) return res.status(503).json({success:false,message:"Not Available"});
 
-
-        return res.status(200).json({success:true,message:getAllDoctorsName});
-    } catch (error) {
-        return res.status(503).json({success:false,message:error.message});
-    }
-}
-
-const get_all_appointment=async(req,res)=>{
-    try {
-        const getResponse=await bookappointment.find({});
-        if(!getResponse){
-            return res.status(503).json({success:false,message:"Not Record Found "});
+        const getAllDoc = await create_doc_data.find({});
+        if (!getAllDoc) {
+            throw new Error("The Data Available")
         }
-        return res.status(200).json({success:true,message:getResponse});
+        console.log(getAllDoc)
+        return res.status(200).json({ success: true, data: getAllDoc });
     } catch (error) {
-        return res.status(503).json({success:false,message:error.message});F
+        next(error)
     }
 }
 
-module.exports = {add_doc_fun,get_all_doctors,admin_login,get_doctors_name,get_all_appointment};
+const get_doctors_name = async (req, res,next) => {
+    const getDep = req.params.id;
+    console.log(getDep)
+    try {
+        const getAllDoctorsName = await create_doc_data.find({ dep: getDep });
+        if (!getAllDoctorsName) throw new Error("Detial Not Found")
+
+
+        return res.status(200).json({ success: true, message: getAllDoctorsName });
+    } catch (error) {
+        next(error)
+    }
+}
+
+const get_all_appointment = async (req, res,next) => {
+    try {
+        const getResponse = await bookappointment.find({});
+        if (!getResponse) {
+            throw new Error("Something Went Wrong")
+        }
+        return res.status(200).json({ success: true, message: getResponse });
+    } catch (error) {
+      next(error)
+    }
+}
+
+module.exports = { add_doc_fun, get_all_doctors, admin_login, get_doctors_name, get_all_appointment };

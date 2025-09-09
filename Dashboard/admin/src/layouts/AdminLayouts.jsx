@@ -42,7 +42,7 @@ function AdminLayouts() {
                 <div className="admin_left_side">
                     <div className="react_icons">
                         <div className="home_icons">
-                            <Link to={'/admin'} > <FaHome /></Link>
+                            <Link to={'/'} > <FaHome /></Link>
                         </div>
                         <div className="doctor_icons">
                             <Link to={'/admin/doctors'} > <FaUserDoctor /></Link>

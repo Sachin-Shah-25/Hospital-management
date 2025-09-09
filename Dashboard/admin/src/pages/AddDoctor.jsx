@@ -14,6 +14,7 @@ function AddDoctor() {
 
   const adddoctorfun = (e) => {
     e.preventDefault();
+    console.log(getdoctordep)
     if (!getdoctorfirstname || !getdoctorlastname || !getdoctoremail || !getdoctorphone ||
       !getdoctornic || !getdoctordob || !getdoctordep || !getdoctorimage) {
       toast.error("All Filed Rquired");
@@ -24,7 +25,7 @@ function AddDoctor() {
       }
       else {
         const newData=new FormData(e.target);
-        axios.post("http://localhost:5000/admin/adddoctor",newData).then(({data}) => {
+        axios.post("http://localhost:5000/admin/adddoctor",newData,{withCredentials:true}).then(({data}) => {
          if(data.success){
           toast.success("Updated");
          }

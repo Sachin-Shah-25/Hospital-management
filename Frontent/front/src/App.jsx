@@ -15,19 +15,19 @@ function App() {
     <>
 <marquee>A hospital is a healthcare institution that provides medical, surgical, and nursing care to patients who are ill or injured</marquee>
       <BrowserRouter>
-      <Navbar></Navbar>
         <Routes> 
-          <Route path='/home' index element={<Home></Home>} />
-          <Route path="/appointment" element={<Appointment />} />
-          <Route path="/about" element={<About />} />
-          {/* <Route path="/login" element={<Login />} /> */}
+
+          <Route path='/'>
+          <Route index element={<Home></Home>} />
+          <Route path="appointment" element={<Appointment />} />
+          <Route path="about" element={<About />} />
+          <Route path="auth" element={<Register />} />
+          </Route>
+
          </Routes>
-         <Routes>
-          <Route path="/auth" element={<Register />} />
-         </Routes>
+      
       </BrowserRouter>
       <ToastContainer position='top-center' />
-      <Footer></Footer>
     </>
   )
 }

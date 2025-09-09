@@ -13,9 +13,8 @@ function App() {
     <div>
       
       <BrowserRouter>
-      
       <Routes>
-        <Route path='/admin' element ={<AdminLayouts></AdminLayouts>}>
+        <Route path='/' element ={<AdminLayouts></AdminLayouts>}>
         <Route index element={<Dashboard></Dashboard>}/>
         <Route path='/admin/doctors' element={<Doctors></Doctors>} />
         <Route path='/admin/adddoctor' element={<AddDoctor></AddDoctor>} />

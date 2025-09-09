@@ -7,7 +7,6 @@ function Appointment({elem}) {
   const [get_opp_status, set_opp_status] = useState("");
 
   const viewchangefun=()=>{
-    
     getContext.setView(elem);
   }
   return (
