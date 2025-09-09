@@ -55,27 +55,31 @@ Open in browser → http://localhost:3000
 📸 Screenshots
 
 🏠 Home Page – Hero section with hospital intro.
+![Home ](./imgs/hos1.JPG)
+![Home ](./imgs/hos2.JPG)
 
-📋 Appointment Page – Form to book appointments.
+
 
 👨‍⚕️ Doctors Section – Displaying specialists.
+![Doctors ](./imgs/hos4.JPG)
 
 🏥 Departments Section – Showcasing hospital departments.
+![Departments ](./imgs/hos3.JPG)
+
+📋 Appointment Page – Form to book appointments.
+![Appointment ](./imgs/hos5.JPG)
+
+Login/Signup Page 
+![Auth ](./imgs/hos6.JPG)
+
+
+
+
 
 🔮 Future Enhancements
 
-✅ Backend integration with Node.js / Django
-
-✅ Database support (MongoDB / MySQL)
-
-✅ Authentication (JWT / OAuth)
-
 ✅ Online payment gateway for appointment booking
 
+
 👨‍💻 Author
-
-Developed by [Your Name] 🚀
-
-👉 Kya tum chahte ho ki main is README ko GitHub style Markdown file (README.md) bana kar download ke liye de du?
-
-ChatGPT can make mistakes. Check important info
+Developed by Sachin Shah 🚀
