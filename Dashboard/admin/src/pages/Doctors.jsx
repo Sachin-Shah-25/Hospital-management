@@ -8,7 +8,8 @@ function Doctors() {
     try {
       const { data } = await axios.get("http://localhost:5000/admin/doctors");
       const response = data.message;
-      setAllDoctors(response);
+      setAllDoctors(data.data);
+      console.log(data.data)
     } catch (error) {
       toast.error(error.message);
     }
@@ -23,7 +24,7 @@ function Doctors() {
       <h1>Doctors</h1>
       <div className="all_doctors">
         {
-          getAllDoctors.map((elem, index) => {
+          getAllDoctors && getAllDoctors.map((elem, index) => {
             return <div className="card">
               <div className="doctor_image">
                 <img src={"http://localhost:5000/img/"+elem.image} alt="" />

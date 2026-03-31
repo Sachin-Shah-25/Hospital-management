@@ -19,14 +19,15 @@ function Register() {
   const [getuserdob, setuserdob] = useState("");
   const [getusergender, setusergender] = useState("");
   const [getuserpassword, setuserpassword] = useState("");
-  const [showForgetBox,setForgetBox]=useState(false)
-  const getFormRef=useRef()
+  const [showForgetBox, setForgetBox] = useState(false)
+  const getFormRef = useRef()
 
   function validateEmail(email) {
     const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     return regex.test(email);
   }
   const submitForm = async (e) => {
+    console.log("1")
     e.preventDefault();
     try {
       if (IsLoggedIn) {
@@ -41,9 +42,11 @@ function Register() {
           return;
         }
         const form_Data = new FormData(e.target);
-        const { data } = await axios.post("http://localhost:5000/user/signup", form_Data, { withCredentials: true ,headers:{
-          "Content-Type":"multipart/form-data"
-        }});
+        const { data } = await axios.post("http://localhost:5000/user/signup", form_Data, {
+          withCredentials: true, headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
         if (data.success || data.status == 200) {
           toast.success("Login");
           setIsLoggedIn(true)
@@ -54,11 +57,11 @@ function Register() {
           setuserdob("");
           setusernic("");
           setuserpassword("");
-          // getContext.setUserAccount(data.message);
         }
         getContext.set_IfUserLogin(true);
       }
       else {
+        console.log("2")
         if (!getuseremail || !getuserpassword) {
           toast.error("All Field are required ");
           return;
@@ -70,64 +73,62 @@ function Register() {
 
         const form_data = new FormData(e.target);
         // const { data } = await axios.post("http://localhost:5000/user/login", form_data, {withCredentials: true});
-
-        const data=await
-         axios.post("http://localhost:5000/user/login",
-          form_data,{
-            withCredentials:true,
-            
-          
+        console.log("3")
+        const data = await
+          axios.post("http://localhost:5000/user/login",
+            form_data, {
+            withCredentials: true,
           })
 
-        getContext.set_IfUserLogin(data.data.data)
-
-        if (data.success || data.status==200) {
+        // getContext.set_IfUserLogin(data)
+        console.log(data)
+        if (data.success || data.status == 200) {
           toast.success("Login Successfully");
-          getContext.setUserAccount(data.message);
+          // getContext.setUserAccount(data.message);
+          getContext.set_IfUserLogin(true);
 
         }
-        getContext.set_IfUserLogin(true);
         getNavigate('/')
 
       }
     }
     catch (error) {
-      const status=error.response.status
-            const msg=error.response.data.message
-            if(status==404){
-              toast.error(msg)
-            }
-            else if(status==409){
-              toast.error(msg)
-            }
-             else if(status==400){
-              toast.error(msg)
-            }
-            else {
-              toast.error("Something went wrong");
-              console.log("An error Occured : ",error.message)
-            }
+      const status = error.response.status
+      const msg = error.response.data.message
+      if (status == 404) {
+        toast.error(msg)
+      }
+      else if (status == 409) {
+        toast.error(msg)
+      }
+      else if (status == 400) {
+        toast.error(msg)
+      }
+      else {
+        toast.error("Something went wrong");
+        console.log("An error Occured : ", error.message)
+      }
     }
   }
 
-  const forgetFunction = ()=>{
+  const forgetFunction = () => {
     setForgetBox(true)
     console.log(getFormRef.current)
   }
   return (
-    <div id='user_register' className=''style={{
+    <div id='user_register' className='' style={{
     }} >
       {
-        showForgetBox 
-        ? <Forget setForgetBox={setForgetBox} showForgetBox={showForgetBox}  ></Forget>
-        :""
+        showForgetBox
+          ? <Forget setForgetBox={setForgetBox} showForgetBox={showForgetBox}  ></Forget>
+          : ""
       }
-     
-      <div className="form_box" ref={getFormRef} 
-      style={{ 
-        textAlign: IsLoggedIn ? "center" : 'left' ,
-        display: showForgetBox?"none":"block"
-      
+
+      <div className="form_box" ref={getFormRef}
+        style={{
+          textAlign: IsLoggedIn ? "center" : 'left',
+          display: showForgetBox ? "none" : "block"
+
         }}>
         <div className="formtype">
           <h1>{IsLoggedIn ? "Sign Up " : "Sign In"}</h1>
@@ -136,7 +137,7 @@ function Register() {
 
         {
           IsLoggedIn
-            ? <form   onSubmit={(e) => submitForm(e)}   >
+            ? <form onSubmit={(e) => submitForm(e)}   >
               <div className="userfirstname">
                 <input type="text" name='userfirstname' value={getuserfirstname} onChange={(e) => { setuserfirstname(e.target.value) }} placeholder='First Name' />
               </div>
@@ -183,12 +184,12 @@ function Register() {
               </div>
               <div>
                 <input type="text" name='userpassword' value={getuserpassword} placeholder='Password' onChange={(e) => setuserpassword(e.target.value)} />
-                <span onClick={()=> forgetFunction()}  style={{
-                  color:"#559af3",
-                  float:"right",
-                  fontSize:".8rem",
-                  marginTop:"5px",
-                  cursor:"pointer"
+                <span onClick={() => forgetFunction()} style={{
+                  color: "#559af3",
+                  float: "right",
+                  fontSize: ".8rem",
+                  marginTop: "5px",
+                  cursor: "pointer"
                 }}>Forget Password ?</span>
               </div>
 

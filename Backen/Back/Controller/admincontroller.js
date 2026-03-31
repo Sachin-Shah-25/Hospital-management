@@ -1,18 +1,27 @@
 const create_doc_data = require("../Model/adminmodel");
 const bookappointment = require("../Model/appmodel");
+const createauthmodel = require("../Model/authmode")
 
 const admin_login = async (req, res, next) => {
-    const { username, useremail, userpassword } = req.body;
+    const { adminemail,adminpassword } = req.body;
+
     try {
         const login_admin = await createauthmodel.create({
-            username,
-            useremail,
-            userpassword
+            useremail:adminemail,
+            userpassword:adminpassword,
         });
         if (!login_admin) {
             throw new Error("Please Login Again")
         }
-        return res.status(201).json({ success: true, message: "Account Created successfully" });
+        console.log("logn ", login_admin)
+        res.cookie("cookies", "yes", {
+            maxAge: 2 * 24 * 60 * 60 * 1000,
+            httpOnly:true,  
+            secure:false
+        })
+        return res.status(201).json({ success: true, message: "Account Created successfully", user: login_admin });
+
+
     } catch (error) {
         next(error)
     }
@@ -46,17 +55,17 @@ const get_all_doctors = async (req, res, next) => {
     try {
 
         const getAllDoc = await create_doc_data.find({});
+        console.log("88888888888888888 ")
         if (!getAllDoc) {
             throw new Error("The Data Available")
         }
-        console.log(getAllDoc)
         return res.status(200).json({ success: true, data: getAllDoc });
     } catch (error) {
         next(error)
     }
 }
 
-const get_doctors_name = async (req, res,next) => {
+const get_doctors_name = async (req, res, next) => {
     const getDep = req.params.id;
     console.log(getDep)
     try {
@@ -70,7 +79,7 @@ const get_doctors_name = async (req, res,next) => {
     }
 }
 
-const get_all_appointment = async (req, res,next) => {
+const get_all_appointment = async (req, res, next) => {
     try {
         const getResponse = await bookappointment.find({});
         if (!getResponse) {
@@ -78,7 +87,7 @@ const get_all_appointment = async (req, res,next) => {
         }
         return res.status(200).json({ success: true, message: getResponse });
     } catch (error) {
-      next(error)
+        next(error)
     }
 }
 

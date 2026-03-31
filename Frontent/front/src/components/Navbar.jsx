@@ -10,27 +10,28 @@ import { GiIndiaGate } from "react-icons/gi";
 import reactIcon from '../assets/react.svg';
 import axios from 'axios';
 import doc4 from "../assets/img/doc4.png"
+import { useQueryClient } from "@tanstack/react-query";
 
 
-function Navbar() {
+export const Navbar = ()=> {
+  const queryClient = useQueryClient();
   const getContext = useContext(Contex);
   const getNavigate = useNavigate();
-  const [getUserImage,setUserImage]=useState([ 
+  const [getUserImage, setUserImage] = useState([
     "avatar1",
     "avatar2",
     "avatar3",
     "avatar5",
   ])
-  
 
 
-  const logoutfun = async() => {
-    const data=await axios.get("http://localhost:5000/logout",{withCredentials:true})
+ 
+  const logoutfun = async () => {
+    const data = await axios.get("http://localhost:5000/logout", { withCredentials: true })
     console.log(data)
-    if(data.status==200){
+    if (data.status == 200) {
       getContext.set_IfUserLogin("");
       toast.warn("Logout Succefully ");
-      getContext.setUserAccount("");
       getNavigate("/auth");
     }
     else {
@@ -40,42 +41,43 @@ function Navbar() {
   }
 
   return (
-    <>
-      <div className="nav-container">
-        <div className="nav_heading">
-          <div className="user_profile_icon">
-            
-          <motion.img
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-                duration: 0.4,
-                scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
-            }}
-            src={doc4}
-            ></motion.img>
-             
-           
-          </div>
-         
-        <ul className="nav-links">
-          <Link to={'/'}>Home</Link>
-          <Link to={'/appointment'}>Appointment</Link>
-          <Link to={'/about'}>AboutUs</Link>
-        </ul>
-        <div className="log_logout">
-       
-          {
-            getContext.get_IfUserLogin
-              ? <Link onClick={logoutfun} >logout</Link>
-              : <Link to={'/auth'}>login</Link>
-          }
+  <div className="nav-container">
+    <div className="nav_heading">
 
-        </div>
-        </div>
+      <div className="user_profile_icon">
+        <motion.img
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.4,
+            scale: { type: "spring", bounce: 0.5 },
+          }}
+          src={doc4}
+        />
+        <span className="logo-text">MediCare</span>
       </div>
-    </>
+
+      <ul className="nav-links">
+        <Link to="/">Home</Link>
+        <Link to="/appointment">Appointment</Link>
+        <Link to="/about">About Us</Link>
+      </ul>
+
+      <div className="log_logout">
+      {console.log("navbar ",  getContext.get_IfUserLogin)}
+        {
+          
+          getContext.get_IfUserLogin
+            ? <Link onClick={logoutfun} className="logout-btn">Logout</Link>
+            : <Link to="/auth" className="login-btn">Login</Link>
+        }
+      </div>
+
+    </div>
+  </div>
   )
+  
+    
+
 }
 
-export default Navbar

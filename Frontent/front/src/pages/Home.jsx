@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useCallback, useState, useRef } from 'react'
 import { motion, AnimatePresence } from "framer-motion";
 import { Contex } from '../Cont/Contex.jsx'
-import Navbar from '../components/Navbar.jsx'
+import { Navbar } from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 import doctor5 from "../assets/img/doctor5.webp"
 import docBack2 from "../assets/img/docBack2.jpg"
@@ -15,10 +15,17 @@ import doc4 from "../assets/img/doc4.png"
 import doc1 from "../assets/img/doc1.png"
 import { Link } from 'react-router-dom'
 import Dep from '../components/Dep.jsx'
+import axios from 'axios'
+import { Help } from '../components/help'
+
+import { useQuery } from "@tanstack/react-query";
+
 function Home() {
-  const [getInd, setInd] = useState(0)
-  const { details ,setDetails,getDoctorsDetails} = useContext(Contex)
-  const [show, setShow] = useState(false)
+  const [getInd, setInd] = useState(0);
+  const { getDoctorsDetails, set_IfUserLogin, get_IfUserLogin } = useContext(Contex)
+  const ref = useRef()
+
+
   const dep = [
     {
       icon: "fa-solid fa-eye",
@@ -59,235 +66,166 @@ function Home() {
     "Journey"
   ];
 
+  useEffect(() => {
+    let id = setTimeout(() => {
+      setInd(prev => prev + 1 >= lastWords.length ? 0 : prev + 1)
+    }, 1000)
+    return () => clearTimeout(id);
+  }, [getInd])
 
   useEffect(() => {
-    setShow(false)
-    const timeout = setTimeout(() => {
-      setShow(true)
-    }, 50)
-    return () => clearTimeout(timeout)
-  }, [details])
-  useEffect(() => {
-    const getInterval = setInterval(() => {
+    const fetchUser = async () => {
+      const { data } = await axios.get("http://localhost:5000/me", {
+        withCredentials: true
+      });
+      set_IfUserLogin(data);
+    };
 
-      setInd((prev) => {
-        if (prev >= lastWords.length - 1) {
-          return 0
-        }
-        else {
-          return prev + 1
-        }
-      })
-    }, 1500)
+    fetchUser();
+  }, []);
 
-    return () => {
-      clearInterval(getInterval)
-    }
-  }, [])
-
-  useEffect(()=>{
-    setDetails(getDoctorsDetails[getInd])
-  },[getInd])
   return (
-    <div className='home'>
-      <Navbar></Navbar>
-
+    <div ref={ref} className='home'>
+      <Navbar  ></Navbar>
       <div className="hero_section">
-        <div className='hero_section_container_left'>
-          <h1>WE CARE ABOUT YOUR <span style={{ color: "#6c6cff" }}>{lastWords[getInd]}</span></h1>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus  facilis quae molestias quis est voluptatum cumque exercitationem! Optio?</p>
 
-          <Link to={"/appointment"}> <button>Appointment</button> </Link>
+        <div className="hero_section_container_left">
+          <h1>
+            WE CARE ABOUT YOUR{"...."}
+            <br></br>
+            <span className="highlight">{lastWords[getInd]}</span>
+          </h1>
+
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Voluptatibus facilis quae molestias quis est voluptatum cumque exercitationem!
+          </p>
+
+          <Link to="/appointment">
+            <button className="hero-btn">Book Appointment</button>
+          </Link>
         </div>
+
         <div className="hero_section_container_right">
-          <img src={doctor8} alt="" style={{ width: "100%", height: "100%", objectFit: 'cover' }} />
+          <img src={doctor8} alt="doctor" />
         </div>
+
       </div>
 
       <div className='hero_section_2'>
+
         <div className='hero_section_container_left'>
           <h1>Welcome To Our Hospital</h1>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus  facilis quae molestias quis est voluptatum Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde, dolorum? cumque exercitationem! Optio?</p>
 
-          <button style={{ display: "block", border: "none" }}>Find Doctors</button>
-          <Link to={"/appointment"}> <button style={{ border: "none" }}>Appointment</button> </Link>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Voluptatibus facilis quae molestias quis est voluptatum
+            Lorem ipsum dolor sit amet consectetur.
+          </p>
+
+          <div className="hero-btn-group">
+            <button className="outline-btn">Find Doctors</button>
+
+            <Link to="/appointment">
+              <button className="primary-btn">Appointment</button>
+            </Link>
+          </div>
         </div>
+
         <div className="hero_section_container_right">
-          <img src={docBack2} alt="" style={{ width: "100%", height: "100%", objectFit: 'cover' }} />
-          <img id='img2' src={doctor2} alt="" style={{ width: "100%", height: "100%", objectFit: 'cover' }} />
+          <img className="bg-img" src={docBack2} alt="background" />
         </div>
+
       </div>
 
       <div className='over_dep'>
-        <div className='over_dep_heading'>
-          <h2> <span ></span> Over Departments <span></span></h2>
-          <h1 style={{ fontSize: "3rem", marginTop: '30px' }}>Our Medical Services</h1>
 
+        <div className='over_dep_heading'>
+          <h2 className="sub-heading">
+            <span></span> Our Departments <span></span>
+          </h2>
+
+          <h1 className="main-heading">Our Medical Services</h1>
         </div>
+
         <div className='cat'>
           {
-            dep.map((det, ind) => {
-              return <Dep depDet={det} key={ind} ></Dep>
-            })
+            dep.map((det, ind) => (
+              <Dep depDet={det} key={ind} />
+            ))
           }
-          {/* <div  onClick={(e)=>getSelectDoctorDetails(e)} style={{
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-evenly",
-            alignItems: "center"
-          }}>
-            <i className="fa-solid fa-eye" style={{
-              display: 'block',
-              fontSize: "5rem"
-            }}></i>
-            <span>Radiology</span>
-          </div>
-          <div onClick={(e)=>getSelectDoctorDetails(e)} style={{
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-evenly",
-            alignItems: "center"
-          }}>
-            <i className="fa-solid fa-heart-pulse" style={{
-              display: 'block',
-              fontSize: "5rem"
-            }}></i>
-            <span>Neurology
-            </span>
-          </div>
-          <div onClick={(e)=>getSelectDoctorDetails(e)} style={{
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-evenly",
-            alignItems: "center"
-          }}>
-            <i className="fa-solid fa-ear-deaf" style={{
-              display: 'block',
-              fontSize: "5rem"
-            }}></i>
-            <span>ENT</span>
-          </div>
-          <div onClick={(e)=>getSelectDoctorDetails(e)} style={{
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-evenly",
-            alignItems: "center"
-          }}>
-            <i className="fa-solid fa-bone" style={{
-              display: 'block',
-              fontSize: "5rem"
-            }}></i>
-            <span>Ortho</span>
-          </div>
-          <div onClick={(e)=>getSelectDoctorDetails(e)} style={{
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-evenly",
-            alignItems: "center"
-          }}>
-            <i className="fa-solid fa-heart-pulse" style={{
-              display: 'block',
-              fontSize: "5rem"
-            }}></i>
-            <span>Cardiology</span>
-          </div>
-          <div onClick={(e)=>getSelectDoctorDetails(e)} style={{
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-evenly",
-            alignItems: "center"
-          }}>
-            <i className="fa-solid fa-brain" style={{
-              display: 'block',
-              fontSize: "5rem"
-            }}></i>
-            <span>Pyhsyo</span>
-          </div> */}
         </div>
+
         <div className="dep">
           <div className='inner_dep'>
+
             <div className='dep_left'>
-              <h1><span style={{color:"#009dff"}} >{details ? details.dep : "Cardiology"}</span> with 12 Years Experience</h1>
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi et asperiores accusamus quibusdam temporibus ullam placeat id exercitationem ea. Labore beatae necessitatibus magnam vero perspiciatis fuga consectetur, ipsa molestias nam.</p>
-              <Link to={"/appointment"}> <button>{
-                details
-                  ? details.name
-                  : "Appointment"
-              }</button> </Link>
+              <h1>
+                <span className="highlight">
+                  {getDoctorsDetails.length > getInd ? getDoctorsDetails[getInd].dep : "Cardiology"}
+                </span>{" "}
+                with  {getDoctorsDetails.length > getInd ? getDoctorsDetails[getInd].exp : "4"} Years Experience
+              </h1>
+
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Sequi et asperiores accusamus quibusdam temporibus ullam.
+              </p>
+
+              <Link to="/appointment">
+                <button className="primary-btn">
+                  Appointment
+                </button>
+              </Link>
             </div>
+
             <div className='dep_right'>
               <AnimatePresence>
-              <motion.img
-                className='showImage'
-                initial={{ opacity: 0, scale: 0.1 }}
-                animate={{ opacity: show?1:0, scale: show?1:0 }}
-                transition={{ duration: 0.5 }}
-                src={
-                  details
-                    ? `http://localhost:5000/img/${details.image}`
-                    : doctor10
-                } alt="" />
-                </AnimatePresence>
+                <motion.img
+                  className='showImage'
+                  initial={{ opacity: 1, scale: 1 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1 }}
+                  src={
+                    doctor10
+                  }
+                />
+              </AnimatePresence>
             </div>
+
           </div>
         </div>
 
         <div className="our_doct">
-          <h1 style={{ display: "flex", alignItems: "baseline", justifyContent: "center" }} >
-            <span style={{ width: "150px", height: '5px', backgroundColor: "#559af3", display: 'inline-block', marginRight: "20px" }}></span>
-            <h1 style={{ color: "#000e54" }}>Our Specialist </h1>
-            <span style={{ width: "150px", height: '5px', backgroundColor: "#559af3", display: 'inline-block', marginLeft: "20px" }}></span>
-          </h1>
+
+          <div className="section-title">
+            <span></span>
+            <h1>Our Specialist</h1>
+            <span></span>
+          </div>
+
           <div className='our_doct_con'>
-            <div className='doct_detail'>
-              <div className="doc_image">
-                <img src={doctor5} alt="" />
-              </div>
-              <div className='details'>
-                <h2 style={{ marginTop: '10px' }}>Dr. Ms Smit</h2>
-                <span style={{ marginTop: "5px", display: "block" }}>Orthopedics</span>
-              </div>
 
-            </div>
-            <div className='doct_detail'>
-              <div className="doc_image">
-                <img src={doctor11} alt="" />
+            {[
+              { img: doctor8, name: "Dr. Ms Smit", dep: "Orthopedics" },
+              { img: doctor11, name: "Dr. Neha Verma", dep: "Neurology" },
+              { img: doctor1, name: "Dr. Arjun Mehta", dep: "Cardiology" },
+              { img: doctor10, name: "Dr. Karan Kapoor", dep: "Radiology" }
+            ].map((doc, i) => (
+              <div className='doct_detail' key={i}>
+                <div className="doc_image">
+                  <img src={doc.img} alt="" />
+                </div>
+                <div className='details'>
+                  <h2>{doc.name}</h2>
+                  <span>{doc.dep}</span>
+                </div>
               </div>
-              <div className='details'>
-                <h2 style={{ marginTop: '10px' }}>Dr. Neha Verma</h2>
-                <span style={{ marginTop: "5px", display: "block" }}>Neurology</span>
-              </div>
-
-            </div>
-            <div className='doct_detail'>
-              <div className="doc_image">
-                <img src={doctor1} alt="" />
-              </div>
-              <div className='details'>
-                <h2 style={{ marginTop: '10px' }}>Dr. Arjun Mehta</h2>
-                <span style={{ marginTop: "5px", display: "block" }}>Cardiology</span>
-              </div>
-
-            </div>
-            <div className='doct_detail'>
-              <div className="doc_image">
-                <img src={doctor7} alt="" />
-              </div>
-              <div className='details'>
-                <h2 style={{ marginTop: '10px' }}>Dr. Karan Kapoor</h2>
-                <span style={{ marginTop: "5px", display: "block" }}>Radiology</span>
-              </div>
-
-            </div>
+            ))}
 
           </div>
         </div>
+        <Help />
       </div>
       <Footer></Footer>
 

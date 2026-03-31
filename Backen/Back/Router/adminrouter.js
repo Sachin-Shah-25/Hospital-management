@@ -4,7 +4,10 @@ const upload = require("../helpers/helper");
 const admin_router = express.Router();
 
 
-admin_router.get("/login",admin_login);
+admin_router.post("/login",(req,res,next)=>{
+    console.log("data ", req.body)
+    next()
+},admin_login);
 admin_router.post("/adddoctor", upload.single('image'),add_doc_fun);
 admin_router.get("/doctors", get_all_doctors);
 admin_router.get("/doctors/:id", get_doctors_name);

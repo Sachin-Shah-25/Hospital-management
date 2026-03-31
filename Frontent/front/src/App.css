@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Mitr:wght@200;300;400;500;600;700&family=Style+Script&family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Mitr:wght@200;300;400;500;600;700&family=Style+Script&family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 * {
@@ -185,7 +185,6 @@ marquee {
 
 }
 
-/* Hero Sections  */
 .hero_section {
   width: 100%;
   display: flex;
@@ -489,7 +488,6 @@ button:hover {
 
 }
 
-/* Regsiter Form Css */
 #user_register {
   width: 100%;
   margin-top: 100px;
@@ -803,14 +801,6 @@ footer {
 
 }
 
-/* 
-#forget_box {
-  margin: "auto";
-  width: "30%";
-  background-color: "#559af3";
-  border-radius: "5px";
-  border-color: "gray"
-} */
 
 
 @media screen and (max-width:1100px) {
@@ -944,4 +934,4 @@ footer {
     justify-content: center;
   }
 
-}
+} */

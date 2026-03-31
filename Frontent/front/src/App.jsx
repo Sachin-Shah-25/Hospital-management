@@ -1,33 +1,36 @@
-import './App.css'
+// import './App.css'
+import './main.css'
+import { Suspense } from "react";
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home'
-import Appointment from './pages/Appointment'
-import About from './pages/About'
-import Register from './pages/Register'
-import Navbar from './components/Navbar';
+import { Navbar } from './components/Navbar';
 import Footer from './components/Footer';
+import ChatBot from './Components/ChatBot'
+import Loader from './pages/Loader'
 
+const Home = React.lazy(() => import("./pages/Home"));
+const Appointment = React.lazy(() => import("./pages/Appointment"));
+const About = React.lazy(() => import("./pages/About"));
+const Register = React.lazy(() => import("./pages/Register"));
 function App() {
   return (
     <>
-<marquee>A hospital is a healthcare institution that provides medical, surgical, and nursing care to patients who are ill or injured</marquee>
       <BrowserRouter>
-        <Routes> 
+        <Suspense fallback={<Loader/>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/appointment" element={<Appointment />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/auth" element={<Register />} />
+          </Routes>
 
-          <Route path='/'>
-          <Route index element={<Home></Home>} />
-          <Route path="appointment" element={<Appointment />} />
-          <Route path="about" element={<About />} />
-          <Route path="auth" element={<Register />} />
-          </Route>
-
-         </Routes>
-      
+          <ChatBot />
+        </Suspense>
       </BrowserRouter>
-      <ToastContainer position='top-center' />
+
+      <ToastContainer position="top-center" />
     </>
   )
 }

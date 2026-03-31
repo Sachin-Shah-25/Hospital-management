@@ -3,13 +3,10 @@ import { Contex } from '../Cont/Contex'
 
 function Dep({depDet}) {
     const {getDoctorsDetails,setDetails}=useContext(Contex)
-    // console.log(getDoctorsDetails)
      const getSelectDoctorDetails=(e)=>{
         const getDepName=e.target
         const trimText=depDet.label.substring(0,3)
-        console.log(trimText)
         const getDctors_Detail=getDoctorsDetails.filter((elem)=> {
-            console.log(elem.dep, " ",trimText)
             if(elem.dep.startsWith(trimText)){
                 return elem
             }
@@ -19,11 +16,12 @@ function Dep({depDet}) {
       }
   return (
      <div  onClick={(e)=>getSelectDoctorDetails(e)} style={{
-            color: "white",
+            color: "navy",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-evenly",
-            alignItems: "center"
+            alignItems: "center",
+            opacity:0.2
           }}>
             <i className={depDet.icon} style={{
               display: 'block',
