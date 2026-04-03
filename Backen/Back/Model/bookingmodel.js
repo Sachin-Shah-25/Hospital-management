@@ -23,6 +23,9 @@ const bookingscheam=new mongoose.Schema({
     number:{
         type:String
     },
+    appdate:{
+        type:String
+    }
 })
 const booking=mongoose.model("booking",bookingscheam)
 

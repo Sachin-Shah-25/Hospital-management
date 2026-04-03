@@ -1,23 +1,20 @@
-const jwt=require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 
-const generteKey=(username,useremail,userId)=>{
-const createKey=jwt.sign({username,useremail,userId},process.env.JWT_SECRET)
-console.log("Key ",createKey)
-return createKey
+const generteKey = (username, useremail, userId) => {
+  const createKey = jwt.sign({ username, useremail, userId }, process.env.MY_TOKEN)
+  return createKey
 }
 
-const verifyUser=(req,res,next)=>{
-    if(!req.cookies['token_key']){
-       return res.status(403).json({ message: "Login Again" });
-    }
-    console.log("token ")
-     jwt.verify(req.cookies['token_key'], process.env.JWT_SECRET, (err, decoded) => {
+const verifyUser = (req, res, next) => {
+  if (!req.cookies["token"]) {
+    return res.status(403).json({ message: "Login Again" });
+  }
+  jwt.verify(req.cookies["token"], process.env.MY_TOKEN, (err, decoded) => {
     if (err) return res.status(401).json({ message: "Login Again " });
-    req.user = decoded; 
-    console.log("decoded ",decoded)
+    req.user = decoded;
     next();
   });
 }
 
-module.exports= {generteKey,verifyUser}
+module.exports = { generteKey, verifyUser }

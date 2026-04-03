@@ -6,41 +6,62 @@ import { Contex } from '../Cont/Contex';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query'
 import ChatBot from '../components/ChatBot'
+import Loader from '../pages/Loader'
 import aiv from '../assets/img/p1.mp4'
+const VITE_BASE_URL = import.meta.env.VITE_BASE_URL
 function Appointment() {
   const { setUserAccount, getUserAccount } = useContext(Contex);
-  const [getUserFirstName, setUserFirstName] = useState("");
-  const [getUserLastName, setUserLastName] = useState("");
-  const [getUserEmail, setUserEmail] = useState("");
-  const [getUserPhone, setUserPhone] = useState("");
-  const [getUserNic, setUserNic] = useState("");
-  const [getUserDOB, setUserDob] = useState("");
-  const [getUserGender, setUserGender] = useState("");
-  const [getUserAdd, setUserAdd] = useState("");
-  const [getUserAptDate, setUserAptDate] = useState("");
-  const [getUserSelectDept, setUserSelectDept] = useState("Ortho");
-  const [getUserSelectDoctor, setUserSelectDoctor] = useState("");
-  const [getAllDoctorName, setAllDoctorName] = useState([]);
+  const [getAllDoctorName, setAllDoctorName] = useState([]); // imp
+  const [getInvalidDetial, setInvalidDetail] = useState(null); // imp
   const [isUserVisited, setIsUserVisited] = useState(false);
+  const [loadingText, setLoadingText] = useState(false);
+  const [getMaxDate, setMaxDate] = useState("")
+  const [getMinDate, setMinDate] = useState("")
+  const [getSlots, setSlots] = useState(null)
+  const [getBookDocName, setBookDocName] = useState(null)
   const getNavigate = useNavigate();
   const getRef = useRef("")
-  const [loadingText, setLoadingText] = useState(false)
+  const currentRequest = useRef("")
+  const controllerRef = useRef("")
+  const bookRef = useRef("")
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    age: "",
+    nic: "",
+    gender: "",
+    appdate: "",
+    dep: "Ortho",
+    doctor: "",
+    condition: "",
+    time: ""
+  });
+
 
   const { data, isError, error, isLoading } = useQuery({
     queryKey: ["search", "allData"],
     queryFn: async function () {
-      console.log("hi")
-      const res = await axios.get("http://localhost:5000/admin/doctors");
+      const res = await axios.get(`${VITE_BASE_URL}/admin/doctors`);
       const data = res.data?.data;
-      console.log(data)
       return data
     }
   })
 
-
+  const getUserDetails = (e) => {
+    setUserData(prev => {
+      return { ...prev, [e.target.name]: e.target.value }
+    })
+  }
   const getAllDoctor = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/admin/doctors/${getUserSelectDept}`, { withCredentials: true });
+      if (currentRequest.current) {
+        currentRequest.current.abort();
+      }
+      const control = new AbortController();
+      currentRequest.current = control;
+      const { data } = await axios.get(`${VITE_BASE_URL}/admin/doctors/${getUserSelectDept}`, { withCredentials: true, signal: currentRequest.control.signal });
       if (data.success || data.status == 200) {
         setAllDoctorName(data.message);
       }
@@ -48,74 +69,78 @@ function Appointment() {
         throw new Error("Not Found")
       }
     } catch (error) {
-
+      if (error.name == "AbortError") {
+        console.log("Request Cancel")
+      }
       toast.error(error.message || "Something went wrong");
       console.log(error.message || "Something Went wrong")
     }
   }
 
 
-
-  $(document).ready(() => {
-    $("#appoint_data").click(() => {
-      $("#appoint_input").attr("type", "date");
-    });
-    $("#dob_data").click(() => {
-      $("#dob_input").attr("type", "date");
-    })
-  });
-
-
-
   const bookAppFun = async (e) => {
     e.preventDefault();
     try {
-      if (!getUserLastName || !getUserFirstName || !getUserEmail || !getUserNic || !getUserPhone || !getUserDOB || !getUserGender || !getUserAptDate || !getUserAdd) {
-        toast.warn("All Filed are Requried");
-        return;
+      if (bookRef.current) {
+        bookRef.current.abort()
       }
-      if (getUserPhone.length > 10) {
-        toast.error("Invalid Phone Number")
-        return
+      const control = new AbortController;
+      bookRef.current = control;
+      for (let key in userData) {
+        if (userData[key] === "") {
+          setInvalidDetail("!! All Filed are Requried")
+          return;
+        }
+        if (userData["age"] <= 10 && Number.isNaN(Number(userData.age))) {
+          setInvalidDetail("Please Enter correct Age")
+          return;
+        }
+        if (Number.isNaN(Number(userData.phone))) {
+          setInvalidDetail("Phone Number is Invalid")
+          return;
+        }
       }
       const patt = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!patt.test(getUserEmail)) {
+      if (!patt.test(userData.email)) {
         toast.error("Email is not valid");
         return;
       }
-
-      const appointForm = new FormData(e.target)
-      console.log(Object.fromEntries(appointForm))
-      const { data } = await axios.post("http://localhost:5000/user/bookappointment", appointForm, {
+      const { data } = await axios.post("http://localhost:5000/user/bookappointment", userData, {
         withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
+
+        signal: control.signal
       });
-      console.log(data)
       if (data.success || data.status == 201) {
-        toast.success("Appointment Book Successfully");
-        setUserFirstName("")
-        setUserLastName("");
-        setUserAdd("");
-        setUserAptDate("");
-        setUserEmail("");
-        setUserDob("");
-        setUserGender("");
-        setUserNic("");
-        setUserSelectDept("");
-        setUserSelectDoctor("");
+        toast.success("Appointment Book Successfully, please check detail in email");
+        setUserData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          age: "",
+          nic: "",
+          gender: "",
+          appdate: "",
+          dep: "Ortho",
+          doctor: "Sachin Shah",
+          condition: "",
+          time: ""
+        })
         getNavigate("/")
       }
     } catch (error) {
-      const status = error.response.status
-      const msg = error.response.data.message
+      console.log(error.message)
+      const status = error.response.status || 500
+      const msg = error.response.data.message || "Something went wrong"
       if (status == 401) {
         toast.error(msg)
         getNavigate("/auth")
       }
       else if (status == 403) {
         getNavigate("/auth")
+        toast.error(msg)
+      }
+      else if (status == 409) {
         toast.error(msg)
       }
       else {
@@ -125,32 +150,17 @@ function Appointment() {
       }
     }
   }
-  useEffect(() => {
-    if (data && !isError) {
-      setAllDoctorName(() => {
-        const filterData = data.filter(
-          (det) => det.dep === getUserSelectDept
-        );
-
-        console.log(filterData);
-
-        const uniqueNames = [...new Set(filterData.map(d => d.name))];
-
-        console.log(uniqueNames);
-
-        return uniqueNames;
-      });
-    }
-   
-    }, [getUserSelectDept]);
 
   const summarizeText = () => {
     setLoadingText(true)
-    setUserAdd("")
+    if (controllerRef.current) {
+      controllerRef.current.abort()
+    }
+    const control = new AbortController()
+    controllerRef.current = control
     const timeOutId = setTimeout(async () => {
 
-      console.log("Hi")
-      if (getUserAdd.trim() === "") {
+      if (userData.condition.trim() === "") {
         getRef.current.focus()
         setLoadingText(false)
         clearTimeout(timeOutId)
@@ -158,64 +168,130 @@ function Appointment() {
       }
 
       try {
-        console.log("text", getUserAdd)
-        const { data } = await axios.post("http://localhost:5000/sum", { message: getUserAdd });
+        const { data } = await axios.post(`${VITE_BASE_URL}/sum`, { message: userData.condition }, { signal: control.signal });
         if (data.success && data.res.role === "assistant") {
-          console.log(data.res.content)
-          setUserAdd(data.res.content)
-
+          setUserData({ ...userData, condition: data.res.content })
         }
       }
       catch (e) {
-        console.log("coudn't process")
+        if (e.name === "CanceledError") {
+          console.log("Request cancelled");
+        } else {
+          console.log("couldn't process");
+        }
       }
       setLoadingText(false)
     }, 2000)
   }
+  const fetchUserData = async () => {
+    try {
+      const res = await axios.get(`${VITE_BASE_URL}/user/myapp`, { withCredentials: true, });
+      setBookDocName(res.data.booked.map(item => item.doctorname))
+    } catch (err) {
+      if (err.response?.status == 403) {
+        getNavigate("/")
+      }
+      console.error(err);
+    }
+  };
+
+
+  useEffect(() => {
+
+    if (data && !isError) {
+      const filterData = data.filter(
+        (det) => det.dep === userData.dep && !getBookDocName.includes(det.name)
+      );
+      setAllDoctorName(() => {
+
+        const uniqueNames = [
+          ...new Set(
+            filterData
+              .filter(d => d.name && !getBookDocName.includes(d.name))
+              .map(d => d.name)
+          )
+        ];
+
+
+        return uniqueNames;
+      });
+      setSlots(filterData[0]?.available.time)
+    }
+  }, [userData.dep]);
+
+  useEffect(() => {
+
+    const dt = new Date();
+    dt.setDate(dt.getDate() + 1)
+    const minDate = dt.toISOString().split("T")[0];
+
+    const dt1 = new Date();
+    dt1.setDate(dt.getDate());
+    const maxDate = dt1.toISOString().split("T")[0];
+
+    setMinDate(minDate);
+    setMaxDate(maxDate);
+
+    fetchUserData()
+  }, [])
+
+  if (isLoading) {
+    <Loader />
+  }
+  if (isError) {
+    navigate("/")
+  }
+
   return (
     <div className="appoint_form">
       <form onSubmit={(e) => bookAppFun(e)}>
 
         <h2 className="form-title">Book Appointment</h2>
-
+        <h4 style={{ width: "100%", textAlign: "center", marginBottom: "30px", color: "red" }}>
+          {
+            getInvalidDetial && getInvalidDetial
+          }
+        </h4>
         <div className="form-grid">
 
-          <input type="text" value={getUserFirstName} name='firstname'
-            onChange={(e) => setUserFirstName(e.target.value)}
+          <input onFocus={() => setInvalidDetail(null)} type="text" value={userData.firstName} name='firstName'
+            onChange={(e) => getUserDetails(e)}
             placeholder='First Name' />
 
-          <input type="text" value={getUserLastName} name='lastname'
-            onChange={(e) => setUserLastName(e.target.value)}
+          <input onFocus={() => setInvalidDetail(null)} type="text" value={userData.lastName} name='lastName'
+            onChange={(e) => getUserDetails(e)}
             placeholder='Last Name' />
 
-          <input type="email" value={getUserEmail} name='email'
-            onChange={(e) => setUserEmail(e.target.value)}
+          <input onFocus={() => setInvalidDetail(null)} type="text" value={userData.age} minLength={2} maxLength={2} name='age'
+            onChange={(e) => getUserDetails(e)}
+            placeholder='Enter Your Age' />
+
+
+          <input onFocus={() => setInvalidDetail(null)} type="email" value={userData.email} name='email'
+            onChange={(e) => getUserDetails(e)}
             placeholder='Email' />
 
-          <input type="tel" value={getUserPhone} name='phone'
-            onChange={(e) => setUserPhone(e.target.value)}
-            placeholder='Phone Number' max={10} />
+          <input onFocus={() => setInvalidDetail(null)} type="tel" value={userData.phone} name='phone'
+            onChange={(e) => getUserDetails(e)}
+            placeholder='Phone Number' maxLength={10} />
 
-          <input type="text" value={getUserNic} name='nic'
-            onChange={(e) => setUserNic(e.target.value)}
+          <input onFocus={() => setInvalidDetail(null)} maxLength={6} type="text" value={userData.nic.toUpperCase()} name='nic'
+            onChange={(e) => getUserDetails(e)}
             placeholder='NIC' />
 
-          <input type="date" value={getUserDOB} name='dob'
-            onChange={(e) => setUserDob(e.target.value)} />
-
-          <select value={getUserGender}
-            onChange={(e) => setUserGender(e.target.value)}>
+          <select onFocus={() => setInvalidDetail(null)} name="gender" value={userData.gender}
+            onChange={(e) => getUserDetails(e)}>
             <option>Select Gender</option>
             <option>Male</option>
             <option>Female</option>
             <option>Other</option>
           </select>
 
-          <input type="date" value={getUserAptDate} name='appdate'
-            onChange={(e) => setUserAptDate(e.target.value)} />
+          <input type="date" onFocus={() => setInvalidDetail(null)} type="date" min={getMinDate} max={getMaxDate} name='appdate'
+            onChange={(e) => getUserDetails(e)} />
 
-          <select value={getUserSelectDept}
-            onChange={(e) => setUserSelectDept(e.target.value)}>
+          <select onFocus={() => setInvalidDetail(null)} value={userData.dep} name="dep"
+            onChange={(e) => getUserDetails(e)}>
             <option>Radiology</option>
             <option>ENT</option>
             <option>Gynecology</option>
@@ -227,12 +303,33 @@ function Appointment() {
             <option>Neurology</option>
           </select>
 
-          <select value={getUserSelectDoctor}
-            onChange={(e) => setUserSelectDoctor(e.target.value)}>
+          <select
+            onFocus={() => setInvalidDetail(null)}
+            name="doctor"
+            value={userData.doctor || ""}
+            onChange={(e) => getUserDetails(e)}
+          >
+            <option value="" disabled>Doctor</option>
+
             {
               getAllDoctorName.map((elem, index) => (
-                <option key={index}>{elem}</option>
+                <option key={index} value={elem}>
+                  {elem}
+                </option>
               ))
+            }
+          </select>
+          <select
+            onFocus={() => setInvalidDetail(null)} value={userData.time || ""} name="time"
+            onChange={(e) => getUserDetails(e)}
+          >
+            <option value="" disabled>Select Time</option>
+            {
+              getSlots && getSlots.map((time) => {
+                return !time.book ? (
+                  <option key={time.slot} value={time.slot}>{time.slot}</option>
+                ) : null
+              })
             }
           </select>
 
@@ -247,11 +344,13 @@ function Appointment() {
             <span>help me...</span>
           </div>
           <div style={{ position: "relative", width: "100%" }}>
-            <textarea ref={getRef}
+            <textarea
+              name="condition"
+              ref={getRef}
               className="full-width textarea_wrapper"
               rows={10}
-              value={getUserAdd}
-              onChange={(e) => setUserAdd(e.target.value)}
+              value={userData.condition}
+              onChange={(e) => getUserDetails(e)}
               placeholder='Describe your health issue...'
             > </textarea>
             {
@@ -268,13 +367,13 @@ function Appointment() {
           </div>
         </div>
 
-        <div className="checkbox">
+        {/* <div className="checkbox">
           <label>
-            <input type="checkbox"
+            <input onFocus={()=>setInvalidDetail(null)} type="checkbox"
               onChange={() => setIsUserVisited(prev => !prev)} />
             Already Visited?
           </label>
-        </div>
+        </div> */}
 
         <button className="submit-btn">Book Appointment</button>
 

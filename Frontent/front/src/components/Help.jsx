@@ -9,7 +9,6 @@ export const Help = () => {
         setLoadingText(true)
         const timeOutId = setTimeout(async () => {
 
-            console.log("Hi")
             if (getText.trim() === "") {
                 textRef.current?.focus()
                 setLoadingText(false)
@@ -18,11 +17,8 @@ export const Help = () => {
             }
 
             try {
-                console.log("text", getText)
                 const { data } = await axios.post("http://localhost:5000/chat", { message: getText });
-                console.log(data)
                 if (data.success) {
-                    console.log(data.reply.content)
                     setText(data.reply.content)
 
                 }

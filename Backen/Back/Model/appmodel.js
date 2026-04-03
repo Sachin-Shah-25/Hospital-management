@@ -1,45 +1,52 @@
-const mongoose=require("mongoose");
+const mongoose = require("mongoose");
 
-const appointment_schema=new mongoose.Schema({
-    firstname:{
-        type:String
+const appointment_schema = new mongoose.Schema({
+    bookinby: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
     },
-    lastname:{
-        type:String
+    firstname: {
+        type: String
     },
-    email:{
-        type:String
+    lastname: {
+        type: String
     },
-    phone:{
-        type:String
+    email: {
+        type: String
     },
-    nic:{
-        type:String
+    phone: {
+        type: String
     },
-    dob:{
-        type:String
+    nic: {
+        type: String
     },
-    gender:{
-        type:String
+    dob: {
+        type: String
     },
-    appdate:{
-        type:String
+    gender: {
+        type: String
     },
-    dep:{
-        type:String
+    appdate: {
+        type: String
     },
-    doctorname:{
-        type:String
+    dep: {
+        type: String
     },
-    address:{
-        type:String
+    doctorname: {
+        type: String
     },
-    isvisited:{
-        type:String,
-        default:'off'
+    address: {
+        type: String
+    },
+    isvisited: {
+        type: String,
+        default: 'off'
+    },
+    time: {
+        type: String
     }
-},{timestamps:true});
+}, { timestamps: true });
 
-const bookappointment = mongoose.model('appointments',appointment_schema);
+const bookappointment = mongoose.model('appointments', appointment_schema);
 
-module.exports=bookappointment;
+module.exports = bookappointment;

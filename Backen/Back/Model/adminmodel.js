@@ -22,13 +22,20 @@ const doctorSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    dep:{
-        type:String,
-        require:true
+    dep: {
+        type: String,
+        require: true
     },
     image: {
         type: String,
         require: true
+    },
+    available: {
+        dep: { type: String },
+        time: [{
+            slot: { type: String },
+            book: { type: Boolean }
+        }]
     }
 }, { timestamps: true });
 

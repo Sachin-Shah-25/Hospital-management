@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 function Forget({ setForgetBox, showForgetBox }) {
-    console.log(showForgetBox)
     const getNavigate = useNavigate()
 
     const passwordChangeFun = (e) => {
@@ -28,7 +27,6 @@ function Forget({ setForgetBox, showForgetBox }) {
                 if (isPasswordChanges.status != 200) {
                     throw new Error("Something Went Wrong")
                 }
-                console.log(isPasswordChanges)
                 const success = toast.success("Password has been Changed")
                 setTimeout(() => {
                     toast.dismiss(success)
@@ -37,7 +35,6 @@ function Forget({ setForgetBox, showForgetBox }) {
                 setForgetBox(false)
 
             } catch (error) {
-                console.log(error)
                 const status = error.response.status
                 if (status == 404) {
                     toast.error(error.response.data.message)

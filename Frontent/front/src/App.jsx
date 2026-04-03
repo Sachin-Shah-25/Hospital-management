@@ -9,9 +9,11 @@ import { Navbar } from './components/Navbar';
 import Footer from './components/Footer';
 import ChatBot from './Components/ChatBot'
 import Loader from './pages/Loader'
+// import Profile from './pages/Profile'
 
 const Home = React.lazy(() => import("./pages/Home"));
 const Appointment = React.lazy(() => import("./pages/Appointment"));
+const Profile = React.lazy(() => import("./pages/Profile"));
 const About = React.lazy(() => import("./pages/About"));
 const Register = React.lazy(() => import("./pages/Register"));
 function App() {
@@ -24,9 +26,10 @@ function App() {
             <Route path="/appointment" element={<Appointment />} />
             <Route path="/about" element={<About />} />
             <Route path="/auth" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
 
-          <ChatBot />
+          {/* <ChatBot /> */}
         </Suspense>
       </BrowserRouter>
 

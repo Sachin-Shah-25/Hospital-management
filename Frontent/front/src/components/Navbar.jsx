@@ -28,7 +28,6 @@ export const Navbar = ()=> {
  
   const logoutfun = async () => {
     const data = await axios.get("http://localhost:5000/logout", { withCredentials: true })
-    console.log(data)
     if (data.status == 200) {
       getContext.set_IfUserLogin("");
       toast.warn("Logout Succefully ");
@@ -45,8 +44,8 @@ export const Navbar = ()=> {
     <div className="nav_heading">
 
       <div className="user_profile_icon">
-        <motion.img
-          initial={{ opacity: 0, scale: 0 }}
+        <motion.img style={{cursor:"pointer"}} onClick={()=>getNavigate("/profile")}
+          initial={{ opacity: 0, scale: 0,cursor:"pointer" }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
             duration: 0.4,
@@ -64,7 +63,6 @@ export const Navbar = ()=> {
       </ul>
 
       <div className="log_logout">
-      {console.log("navbar ",  getContext.get_IfUserLogin)}
         {
           
           getContext.get_IfUserLogin

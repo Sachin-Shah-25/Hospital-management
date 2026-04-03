@@ -12,7 +12,6 @@ function Dep({depDet}) {
             }
         })
         setDetails(getDctors_Detail[0])
-        console.log(getDctors_Detail)
       }
   return (
      <div  onClick={(e)=>getSelectDoctorDetails(e)} style={{

@@ -5,7 +5,6 @@ const admin_router = express.Router();
 
 
 admin_router.post("/login",(req,res,next)=>{
-    console.log("data ", req.body)
     next()
 },admin_login);
 admin_router.post("/adddoctor", upload.single('image'),add_doc_fun);

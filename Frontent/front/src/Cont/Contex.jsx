@@ -29,6 +29,20 @@ export const ContextProvider = (props) => {
     }
   }
 
+  //   const meFun=async()=>{
+  //   try {
+  //     const res=await axios.get("http://localhost:5000/me",{ withCredentials: true})
+  //     if(res.status!=200){
+  //       throw new Error("Something Went wrong")
+  //     }
+  //     const getData=res.data.data
+  //     set_IfUserLogin(getData)
+
+  //   } catch (error) {
+  //     console.log("Error : ",error.message)
+  //   }
+  // }
+
 
   return <Contex.Provider value={{ getUserAccount, setUserAccount, get_IfUserLogin, set_IfUserLogin,getDoctorsDetails ,setDetails,details,getAllDoctorsFun}} >
     {props.children}

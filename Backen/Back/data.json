@@ -1,0 +1,192 @@
+[
+  {
+    "name": "Dr. Priya Mehta",
+    "email": "priya.mehta@example.com",
+    "phone": "9123456780",
+    "nic": "NIC223456",
+    "dob": "1988-03-12",
+    "dep": "Neurology",
+    "image": "doctor1.webp",
+    "available": {
+      "dep": "Neurology",
+      "time": [
+        {"slot": "09:00 AM", "book": false},
+        {"slot": "10:30 AM", "book": false},
+        {"slot": "12:00 PM", "book": false},
+        {"slot": "02:00 PM", "book": false},
+        {"slot": "04:00 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Arjun Sharma",
+    "email": "arjun.sharma@example.com",
+    "phone": "9834567210",
+    "nic": "NIC334521",
+    "dob": "1980-07-25",
+    "dep": "Orthopedics",
+    "image": "doctor2.webp",
+    "available": {
+      "dep": "Orthopedics",
+      "time": [
+        {"slot": "10:00 AM", "book": false},
+        {"slot": "11:30 AM", "book": false},
+        {"slot": "01:00 PM", "book": false},
+        {"slot": "03:00 PM", "book": false},
+        {"slot": "05:00 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Sneha Kapoor",
+    "email": "sneha.kapoor@example.com",
+    "phone": "9765432180",
+    "nic": "NIC445678",
+    "dob": "1992-11-05",
+    "dep": "Dermatology",
+    "image": "doctor3.webp",
+    "available": {
+      "dep": "Dermatology",
+      "time": [
+        {"slot": "09:30 AM", "book": false},
+        {"slot": "11:00 AM", "book": false},
+        {"slot": "01:30 PM", "book": false},
+        {"slot": "03:30 PM", "book": false},
+        {"slot": "05:30 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Rajeev Nair",
+    "email": "rajeev.nair@example.com",
+    "phone": "9012345678",
+    "nic": "NIC556789",
+    "dob": "1975-04-18",
+    "dep": "Pediatrics",
+    "image": "doctor4.webp",
+    "available": {
+      "dep": "Pediatrics",
+      "time": [
+        {"slot": "08:30 AM", "book": false},
+        {"slot": "10:00 AM", "book": false},
+        {"slot": "12:00 PM", "book": false},
+        {"slot": "02:30 PM", "book": false},
+        {"slot": "04:30 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Anita Desai",
+    "email": "anita.desai@example.com",
+    "phone": "9876543210",
+    "nic": "NIC667890",
+    "dob": "1985-09-30",
+    "dep": "Gynecology",
+    "image": "doctor5.webp",
+    "available": {
+      "dep": "Gynecology",
+      "time": [
+        {"slot": "09:00 AM", "book": false},
+        {"slot": "11:00 AM", "book": false},
+        {"slot": "01:00 PM", "book": false},
+        {"slot": "03:00 PM", "book": false},
+        {"slot": "05:00 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Vikram Bose",
+    "email": "vikram.bose@example.com",
+    "phone": "9345678901",
+    "nic": "NIC778901",
+    "dob": "1978-01-14",
+    "dep": "Oncology",
+    "image": "doctor6.webp",
+    "available": {
+      "dep": "Oncology",
+      "time": [
+        {"slot": "10:00 AM", "book": false},
+        {"slot": "12:00 PM", "book": false},
+        {"slot": "02:00 PM", "book": false},
+        {"slot": "04:00 PM", "book": false},
+        {"slot": "05:30 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Meera Iyer",
+    "email": "meera.iyer@example.com",
+    "phone": "9456789012",
+    "nic": "NIC889012",
+    "dob": "1990-06-22",
+    "dep": "Radiology",
+    "image": "doctor7.webp",
+    "available": {
+      "dep": "Radiology",
+      "time": [
+        {"slot": "08:00 AM", "book": false},
+        {"slot": "09:30 AM", "book": false},
+        {"slot": "11:30 AM", "book": false},
+        {"slot": "01:30 PM", "book": false},
+        {"slot": "03:30 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Suresh Pillai",
+    "email": "suresh.pillai@example.com",
+    "phone": "9567890123",
+    "nic": "NIC990123",
+    "dob": "1983-12-08",
+    "dep": "ENT",
+    "image": "doctor8.webp",
+    "available": {
+      "dep": "ENT",
+      "time": [
+        {"slot": "09:00 AM", "book": false},
+        {"slot": "10:30 AM", "book": false},
+        {"slot": "12:30 PM", "book": false},
+        {"slot": "02:30 PM", "book": false},
+        {"slot": "05:00 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Kavya Reddy",
+    "email": "kavya.reddy@example.com",
+    "phone": "9678901234",
+    "nic": "NIC101234",
+    "dob": "1987-08-16",
+    "dep": "Psychiatry",
+    "image": "doctor9.webp",
+    "available": {
+      "dep": "Psychiatry",
+      "time": [
+        {"slot": "10:00 AM", "book": false},
+        {"slot": "11:30 AM", "book": false},
+        {"slot": "01:00 PM", "book": false},
+        {"slot": "03:00 PM", "book": false},
+        {"slot": "05:30 PM", "book": false}
+      ]
+    }
+  },
+  {
+    "name": "Dr. Amit Joshi",
+    "email": "amit.joshi@example.com",
+    "phone": "9789012345",
+    "nic": "NIC112345",
+    "dob": "1976-02-28",
+    "dep": "Urology",
+    "image": "doctor10.webp",
+    "available": {
+      "dep": "Urology",
+      "time": [
+        {"slot": "08:30 AM", "book": false},
+        {"slot": "10:00 AM", "book": false},
+        {"slot": "11:30 AM", "book": false},
+        {"slot": "02:00 PM", "book": false},
+        {"slot": "04:30 PM", "book": false}
+      ]
+    }
+  }
+]

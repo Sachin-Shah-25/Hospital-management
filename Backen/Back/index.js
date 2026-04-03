@@ -1,18 +1,18 @@
 const express = require('express');
 const dotenv = require('dotenv')
-dotenv.config()
 const { default: mongoose } = require('mongoose');
 const admin_router = require('./Router/adminrouter');
 const app = express();
 const cors = require('cors');
 const user_router = require('./Router/userrouter');
 
-const booking=require('./model/bookingmodel')
+const booking = require('./model/bookingmodel')
 const cookieParser = require('cookie-parser');
 const upload = require('./helpers/helper');
 const { getUserFun, chnagePasswordFun } = require('./Controller/authcontoller');
 const { verifyUser } = require('./utils/token');
 const create_auth_model = require("./Model/authmode")
+dotenv.config()
 const Groq = require("groq-sdk")
 
 
@@ -37,16 +37,13 @@ let userState = {
 }
 
 app.use('/admin', upload.none(), (req, res, next) => {
-    console.log(req.body, " hi ")
     next()
 }, admin_router);
 
 app.get('/myadminid', (req, res, next) => {
-    console.log("rn ")
     next()
 }, async (req, res, next) => {
     try {
-        console.log("cookies ", req.cookies.cookies)
         if (req.cookies.cookies) {
             const data = await create_auth_model.findOne({});
             return res.status(200).json(data);
@@ -58,7 +55,6 @@ app.get('/myadminid', (req, res, next) => {
 });
 
 app.get('/me', (req, res, next) => {
-    console.log("rn ")
     userState = {
         step: "askName",
         data: {}
@@ -66,9 +62,7 @@ app.get('/me', (req, res, next) => {
     next()
 }, async (req, res, next) => {
     try {
-        console.log("cookies ", req.cookies['token_key'])
-        if (req.cookies['token_key']) {
-            // const data = await create_auth_model.findOne({});
+        if (req.cookies['token']) {
             return res.status(200).json({ success: true, message: "User loged" });
         }
 
@@ -79,7 +73,6 @@ app.get('/me', (req, res, next) => {
 
 
 app.post("/chat", async (req, res, next) => {
-    console.log("chat box")
     try {
         const { message } = req.body;
         const response = await groq.chat.completions.create({
@@ -100,10 +93,9 @@ app.post("/chat", async (req, res, next) => {
                 { role: "user", content: message }
             ],
             model: "llama-3.1-8b-instant"
-          
+
         })
-        console.log(response.choices[0].message)
-        return res.status(200).json({ success: true, message: "Done",reply:response.choices[0].message })
+        return res.status(200).json({ success: true, message: "Done", reply: response.choices[0].message })
     }
     catch (e) {
         next(e)
@@ -140,8 +132,6 @@ Sir meri tabyiet kharab hai
             ],
             model: "llama-3.1-8b-instant"
         });
-        console.log(response)
-        console.log(response.choices[0].message)
         return res.status(200).json({ success: true, res: response.choices[0].message })
     } catch (e) {
         next(e)
@@ -178,14 +168,10 @@ app.post("/usercred", async (req, res, next) => {
         }
         else if (userState.step === "dep") {
             userState.data.dep = det
-            console.log("bookin SucessFull")
-            console.log(userState)
             const re = res.status(200).json({ confirmBooking: true, success: true, rep: det, message: "Appointment Booked", details: userState })
-            console.log(re)
             return re;
         }
         else {
-            console.log(det)
             return res.status(200).json({ success: false, message: "We coudn't process further" })
         }
 
@@ -197,40 +183,56 @@ app.post("/usercred", async (req, res, next) => {
 })
 
 
-app.get("/confrim",async(req,res,next)=>{
-try{
-    
-    const data=await booking.create({...userState.data})
-    if(!data){
-        throw new Error()
+app.get("/confrim", async (req, res, next) => {
+    try {
+
+        const data = await booking.create({ ...userState.data })
+        if (!data) {
+            throw new Error()
+        }
+        return res.json(200).status({ success: true, message: "Booked", data })
     }
-    return res.json(200).status({success:true,message:"Booked",data})
-}
-catch(e){
-    next(e)
-}
+    catch (e) {
+        next(e)
+    }
 })
 
-app.use("/user", upload.none(), (req, res, next) => {
-    // console.log("data ", req.body)
+app.use("/user", (req, res, next) => {
     next()
 }, user_router);
 
 app.use((err, req, res, next) => {
-    console.log("error ", err)
     return res.status(err.status || 500).json({ message: err.message || "Something went wrong" })
 })
+    // {
 
-
-
-
-app.get("/userid", (req, res, next) => {
-    userState = {
-        step: "askName",
-        data: {}
-    }
-    next()
-}, verifyUser, getUserFun)
+    //   "name": "Dr. Priya Mehta",
+    //   "email": "priya.mehta@example.com",
+    //   "phone": "9123456780",
+    //   "nic": "NIC223456",
+    //   "dob": "1988-03-12",
+    //   "dep": "Neurology",
+    //   "image": "doctor2.webp"
+    // }
+    // available=[
+    //     {
+    //         dep:"Orthopedics"
+    //         time=[
+    //             "11:00Am",
+    //             "01:00PM",
+    //             "4:00PM",
+    //             "6:00Pm",
+    //         ]
+    //     }
+    // ]
+    /
+    app.get("/userid", (req, res, next) => {
+        userState = {
+            step: "askName",
+            data: {}
+        }
+        next()
+    }, verifyUser, getUserFun)
 app.get("/logout", (req, res) => {
     userState = {
         step: "askName",
@@ -244,7 +246,7 @@ app.get("/logout", (req, res) => {
 })
 app.post("/changep", upload.none(), chnagePasswordFun)
 
-mongoose.connect("mongodb+srv://sachin:sachin@cluster0.pw34icm.mongodb.net/?appName=Cluster0").then(() => console.log("success")).catch((e) => console.log(e.message));
+mongoose.connect(process.env.DATABASE_URL).then(() => console.log("success")).catch((e) => console.log(e.message));
 app.listen(5000, function () {
     console.log("Server Started At : ", 5000);
 })

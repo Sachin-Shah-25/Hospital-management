@@ -13,7 +13,6 @@ const admin_login = async (req, res, next) => {
         if (!login_admin) {
             throw new Error("Please Login Again")
         }
-        console.log("logn ", login_admin)
         res.cookie("cookies", "yes", {
             maxAge: 2 * 24 * 60 * 60 * 1000,
             httpOnly:true,  
@@ -29,7 +28,6 @@ const admin_login = async (req, res, next) => {
 
 const add_doc_fun = async (req, res, next) => {
     const { firstname, lastname, email, phone, nic, dob, dep } = req.body
-    console.log(req.body)
     try {
         if (!req.file) {
             throw new Error("Image Not Found")
@@ -55,7 +53,6 @@ const get_all_doctors = async (req, res, next) => {
     try {
 
         const getAllDoc = await create_doc_data.find({});
-        console.log("88888888888888888 ")
         if (!getAllDoc) {
             throw new Error("The Data Available")
         }
@@ -67,7 +64,6 @@ const get_all_doctors = async (req, res, next) => {
 
 const get_doctors_name = async (req, res, next) => {
     const getDep = req.params.id;
-    console.log(getDep)
     try {
         const getAllDoctorsName = await create_doc_data.find({ dep: getDep });
         if (!getAllDoctorsName) throw new Error("Detial Not Found")
