@@ -1,6 +1,8 @@
 import aiv from '../assets/img/p1.mp4'
 import { useState, useRef } from 'react'
 import axios from 'axios'
+const VITE_BASE_URL =import.meta.env.VITE_BASE_URL
+
 export const Help = () => {
     const [getText, setText] = useState("")
     const [getLoadingText, setLoadingText] = useState(false)
@@ -17,7 +19,7 @@ export const Help = () => {
             }
 
             try {
-                const { data } = await axios.post("http://localhost:5000/chat", { message: getText });
+                const { data } = await axios.post(`${VITE_BASE_URL}/chat`, { message: getText });
                 if (data.success) {
                     setText(data.reply.content)
 

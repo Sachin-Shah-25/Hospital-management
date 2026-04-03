@@ -75,7 +75,7 @@ function Home() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await axios.get("http://localhost:5000/me", {
+      const { data } = await axios.get(`${VITE_BASE_URL}/me`, {
         withCredentials: true
       });
       set_IfUserLogin(data);

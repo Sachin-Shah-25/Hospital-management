@@ -2,7 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-
+const VITE_BASE_URL = import.meta.env.VITE_BASE_URL
 function Forget({ setForgetBox, showForgetBox }) {
     const getNavigate = useNavigate()
 
@@ -22,7 +22,7 @@ function Forget({ setForgetBox, showForgetBox }) {
                     toast.error("Password Doen't Match")
                     return
                 }
-                const isPasswordChanges = await axios.post("http://localhost:5000/changep", formData, { withCrendentials: true })
+                const isPasswordChanges = await axios.post(`${VITE_BASE_URL}/changep`, formData, { withCrendentials: true })
 
                 if (isPasswordChanges.status != 200) {
                     throw new Error("Something Went Wrong")

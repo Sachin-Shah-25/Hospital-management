@@ -105,7 +105,7 @@ function Appointment() {
         toast.error("Email is not valid");
         return;
       }
-      const { data } = await axios.post("http://localhost:5000/user/bookappointment", userData, {
+      const { data } = await axios.post(`${VITE_BASE_URL}/user/bookappointment`, userData, {
         withCredentials: true,
 
         signal: control.signal

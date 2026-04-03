@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import axios from 'axios'
 import BotText from '../components/BotText'
 import { Dialog } from '../components/Dialog'
+const VITE_BASE_URL =import.meta.env.VITE_BASE_URL
 const ChatBot = () => {
     const [getInput, setInput] = useState("")
     const [open, setOpen] = useState(false)
@@ -18,7 +19,7 @@ const ChatBot = () => {
     const sendMessage = async () => {
       
         try {
-            const { data } = await axios.post("http://localhost:5000/usercred", { det: getInput })
+            const { data } = await axios.post(`${VITE_BASE_URL}/usercred`, { det: getInput })
             if (!data.success) {
                 console.log("Coun't processs")
                 return;
