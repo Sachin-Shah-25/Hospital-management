@@ -287,7 +287,7 @@ function Appointment() {
             <option>Other</option>
           </select>
 
-          <input type="date" onFocus={() => setInvalidDetail(null)} type="date" min={getMinDate} max={getMaxDate} name='appdate'
+          <input type="date" onFocus={() => setInvalidDetail(null)} min={getMinDate} max={getMaxDate} name='appdate'
             onChange={(e) => getUserDetails(e)} />
 
           <select onFocus={() => setInvalidDetail(null)} value={userData.dep} name="dep"

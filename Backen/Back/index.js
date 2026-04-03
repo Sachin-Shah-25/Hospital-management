@@ -6,7 +6,7 @@ const app = express();
 const cors = require('cors');
 const user_router = require('./Router/userrouter');
 
-const booking = require('./model/bookingmodel')
+const booking = require('./Model/bookingmodel.js')
 const cookieParser = require('cookie-parser');
 const upload = require('./helpers/helper');
 const { getUserFun, chnagePasswordFun } = require('./Controller/authcontoller');
@@ -247,6 +247,6 @@ app.get("/logout", (req, res) => {
 app.post("/changep", upload.none(), chnagePasswordFun)
 
 mongoose.connect(process.env.DATABASE_URL).then(() => console.log("success")).catch((e) => console.log(e.message));
-app.listen(5000, function () {
+app.listen(process.env.PORT || 3000, function () {
     console.log("Server Started At : ", 5000);
 })

@@ -29,7 +29,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
           </Routes>
 
-          {/* <ChatBot /> */}
+          <ChatBot style={{display:"none"}} />
         </Suspense>
       </BrowserRouter>
 
