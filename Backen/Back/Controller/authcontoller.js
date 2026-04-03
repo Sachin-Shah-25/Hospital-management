@@ -9,7 +9,7 @@ const create_user_acc = async (req, res, next) => {
     try {
         const { username, useremail, userpassword } = req.body;
         if (req.cookies["token"]) {
-            res.cookie("token", usertoken, {
+            res.cookie("token", "", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -45,7 +45,7 @@ const user_login = async (req, res, next) => {
         }
 
         const getToken = generteKey(isUserFind.username, isUserFind.useremail, isUserFind._id)
-        res.cookie("token", usertoken, {
+        res.cookie("token", getToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
