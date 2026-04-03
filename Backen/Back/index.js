@@ -242,10 +242,12 @@ app.get("/logout", (req, res) => {
         step: "askName",
         data: {}
     }
-    res.clearCookie("token", {
-        httpOnly: true,
-        secure: false
-    });
+    res.cookie("token", "", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                maxAge: 0
+            })
     return res.status(200).json({ message: "Logged out successfully" });
 })
 app.post("/changep", upload.none(), chnagePasswordFun)
