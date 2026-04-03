@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+const VITE_BASE_URL=import.meta.env.VITE_BASE_URL
 
 export const Contex = createContext();
 
@@ -14,7 +15,7 @@ export const ContextProvider = (props) => {
   
   const getAllDoctorsFun=async()=>{
     try {
-      const res=await axios.get("http://localhost:5000/admin/doctors")
+      const res=await axios.get(`${VITE_BASE_URL}/admin/doctors`)
       if(res.status!=200){
         throw new Error("Something Went wrong")
       }
@@ -28,20 +29,6 @@ export const ContextProvider = (props) => {
       console.log("Error : ",error.message)
     }
   }
-
-  //   const meFun=async()=>{
-  //   try {
-  //     const res=await axios.get("http://localhost:5000/me",{ withCredentials: true})
-  //     if(res.status!=200){
-  //       throw new Error("Something Went wrong")
-  //     }
-  //     const getData=res.data.data
-  //     set_IfUserLogin(getData)
-
-  //   } catch (error) {
-  //     console.log("Error : ",error.message)
-  //   }
-  // }
 
 
   return <Contex.Provider value={{ getUserAccount, setUserAccount, get_IfUserLogin, set_IfUserLogin,getDoctorsDetails ,setDetails,details,getAllDoctorsFun}} >
