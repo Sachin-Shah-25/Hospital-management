@@ -7,7 +7,7 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import Footer from './components/Footer';
-import ChatBot from './Components/ChatBot'
+import ChatBot from './components/ChatBot'
 import Loader from './pages/Loader'
 // import Profile from './pages/Profile'
 
