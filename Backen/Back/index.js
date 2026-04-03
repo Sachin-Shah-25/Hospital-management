@@ -18,7 +18,10 @@ const Groq = require("groq-sdk")
 
 
 const options = {
-  origin: "https://hospital-management-cdf8.vercel.app",
+  origin: [
+    "https://hospital-management-cdf8.vercel.app",
+    "https://hospital-management-cdf8-git-main-sachin-shah-25s-projects.vercel.app"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }
