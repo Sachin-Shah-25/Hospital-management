@@ -23,7 +23,7 @@ app.use(express.static("public"));
 
 
 const options = {
-    origin: ["https://hospital-management-cdf8-git-main-sachin-shah-25s-projects.vercel.app"],
+    origin: ["https://https://hospital-management-cdf8.vercel.app"],
     credentials: true
 }
 app.use(cors(options));
