@@ -16,17 +16,18 @@ dotenv.config()
 const Groq = require("groq-sdk")
 
 
+
+const options = {
+  origin: "https://hospital-management-cdf8.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}
+app.use(cors(options));
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
-
-
-const options = {
-    origin: ["https://https://hospital-management-cdf8.vercel.app"],
-    credentials: true
-}
-app.use(cors(options));
 
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY
