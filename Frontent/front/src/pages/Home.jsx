@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom'
 import Dep from '../components/Dep.jsx'
 import axios from 'axios'
 import { Help } from '../components/Help.jsx'
-
+const VITE_BASE_URL=import.meta.env.VITE_BASE_URL
 import { useQuery } from "@tanstack/react-query";
 
 function Home() {

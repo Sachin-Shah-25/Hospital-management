@@ -23,7 +23,7 @@ app.use(express.static("public"));
 
 
 const options = {
-    origin: ["http://localhost:5173", "http://localhost:5174", ["*"]],
+    origin: ["https://hospital-management-cdf8-git-main-sachin-shah-25s-projects.vercel.app"],
     credentials: true
 }
 app.use(cors(options));
