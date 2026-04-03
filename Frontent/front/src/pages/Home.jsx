@@ -16,7 +16,7 @@ import doc1 from "../assets/img/doc1.png"
 import { Link } from 'react-router-dom'
 import Dep from '../components/Dep.jsx'
 import axios from 'axios'
-import { Help } from '../components/help'
+import { Help } from '../components/Help.jsx'
 
 import { useQuery } from "@tanstack/react-query";
 
