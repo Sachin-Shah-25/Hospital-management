@@ -242,7 +242,7 @@ app.get("/logout", (req, res) => {
         step: "askName",
         data: {}
     }
-    res.clearCookie("token_key", {
+    res.clearCookie("token", {
         httpOnly: true,
         secure: false
     });
